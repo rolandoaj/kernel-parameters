@@ -1,0 +1,18 @@
+---
+# tasks file for kernel-parameters
+- name: Check bckp directory
+  stat:
+    path: '/root/backp_{{ date }}'
+  register: directory_data
+
+- name: Create backup directory if it doesn't exist
+  file:
+    path: '/root/backp_{{ date }}'
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+  when: not directory_data.stat.exists
+
+- name: Configuring kernel parameters
+  include_tasks: configure_kernel.yml
